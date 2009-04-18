@@ -1,0 +1,23 @@
+== Introduction
+
+Ruby has many useful libraries. It may take a lot of time to re-implement them
+in other languages.
+
+This project aims to create a Ruby server that accepts commands from remote
+clients, evaluates them, then sends back the results. The server supports
+session:
+* Each connection has its own binding (http://www.ruby-doc.org/core/classes/Binding.html)
+* A client may keep a persistent connection and send one command at a time,
+a command may reuse the binding of the command before it
+
+== Communication specification
+
+Each command is in the form:
+* 4 bytes: command length (big endian)
+* Next bytes: command string
+
+Result:
+* 4 bytes: result length (big endian)
+* Next bytes: result length
+
+See "example" directory for a client for Erlang.
