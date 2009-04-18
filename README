@@ -12,12 +12,7 @@ a command may reuse the binding of the command before it
 
 == Communication specification
 
-Each command is in the form:
-* 4 bytes: command length (big endian)
-* Next bytes: command string
+Commands sent to the server and responses from the server are in the form:
+payload_length (4 bytes, big endian) | payload (string)
 
-Result:
-* 4 bytes: result length (big endian)
-* Next bytes: result length
-
-See "example" directory for a client for Erlang.
+The payload is only a string. See "example" directory for a client for Erlang.

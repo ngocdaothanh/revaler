@@ -1,29 +1,36 @@
-require 'rubygems'
-require 'eventmachine'
+require File.join(File.dirname(__FILE__), 'ruby_eval_utils')
 
 module RubyEvalServer
-  def self.start(host, port)
-    EventMachine::run { EventMachine::start_server(host, port, self) }
-  end
+  include RubyEvalUtils
 
   def post_init
-    @ruby_eval_server_binding = nil
-    @ruby_eval_server_result  = nil
-    @ruby_eval_server_command_length = nil
-    @ruby_eval_server_command_string = nil
+    puts 'Client connected'
   end
 
   def receive_data(bytes)
-    send_data ">>>you sent: #{data}"
-    close_connection if data =~ /quit/i
+    @buffer = '' unless @buffer
+
+    @buffer << bytes
+    @buffer, payloads = extract_payloads(@buffer)
+    payloads.each do |payload|
+      result = eval_more(payload) rescue ($!.to_s + "\n" + $!.backtrace.join("\n"))
+      send_payload(result.to_s)
+    end
   end
 
-  def eval2(cmd)
-    unless $binding
-    $binding = binding
-    p 9
+  def unbind
+    puts 'Client disconnected'
   end
-    $binding = eval("$result = (" + cmd + "); binding", $binding)
-    $result
+
+  private
+
+  # Evaluates payload and returns the result.
+  def eval_more(payload)
+    # @result and @binding are used as static variable in C
+    @result = nil
+    @binding = binding if @binding.nil?
+    cmd = "@result = (#{payload}); binding"
+    @binding = eval(cmd, @binding)
+    @result
   end
 end
