@@ -36,6 +36,8 @@ class RubyClient < EM::Connection
   end
 end
 
+trap(:INT) { EM.stop }
+
 host = ARGV[0]
 port = ARGV[1].to_i
 EM::run do

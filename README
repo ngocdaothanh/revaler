@@ -3,16 +3,27 @@
 Ruby has many useful libraries. It may take a lot of time to re-implement them
 in other languages.
 
-This project aims to create a Ruby server that accepts commands from remote
-clients, evaluates them, then sends back the results. The server supports
-session:
+This project aims to create a server that accepts Ruby code from remote
+clients (Ruby, Erlang, Java, C...), evaluates them, then sends back the results.
+
+The server supports session:
 * Each connection has its own binding (http://www.ruby-doc.org/core/classes/Binding.html)
-* A client may keep a persistent connection and send one command at a time,
-a command may reuse the binding of the command before it
+* A client may keep a persistent connection and send one line of code at a time,
+new lines of code will reuse the resulting binding of previous lines
 
 == Communication specification
 
-Commands sent to the server and responses from the server are in the form:
-header (payload length, 4-byte integer, big endian) | payload (string)
+Code sent to the server and results from the server are in the form:
+* header + payload
+* header is a 4-byte big-endian integer indicating payload length
+* payload is a string, not terminated with null byte
 
-The payload is only a string. See "example" directory for a client for Erlang.
+== Examples
+
+See "example" directory.
+
+Start server:
+ruby bin/revaler.rb localhost 9999
+
+Run Ruby client:
+ruby example/ruby_client.rb localhost 9999
