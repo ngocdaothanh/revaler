@@ -1,7 +1,7 @@
-require File.join(File.dirname(__FILE__), 'ruby_eval_utils')
+require File.join(File.dirname(__FILE__), 'revaler_utils')
 
-module RubyEvalServer
-  include RubyEvalUtils
+module Revaler
+  include RevalerUtils
 
   def post_init
     puts 'Client connected'
@@ -13,8 +13,9 @@ module RubyEvalServer
     @buffer << bytes
     @buffer, payloads = extract_payloads(@buffer)
     payloads.each do |payload|
-      result = eval_more(payload) rescue ($!.to_s + "\n" + $!.backtrace.join("\n"))
-      send_payload(result.to_s)
+      result = eval_more(payload).to_s rescue ($!.to_s + "\n" + $!.backtrace.join("\n"))
+      puts "#{payload}  # => #{result}"
+      send_payload(result)
     end
   end
 

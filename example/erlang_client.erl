@@ -3,7 +3,7 @@
 -export([start/2, send_command/1]).
 -export([connect/2]).
 
--define(NUM_BYTES_FOR_PAYLOAD_LENGTH, 4).
+-define(HEADER_NUM_BYTES, 4).
 
 start(Host, Port) ->
 	Pid = spawn(?MODULE, connect, [Host, Port]),
@@ -13,7 +13,7 @@ send_command(Command) ->
 	?MODULE ! {command, Command}.
 
 connect(Host, Port) ->
-	{ok, Socket} = gen_tcp:connect(Host, Port, [binary, {packet, ?NUM_BYTES_FOR_PAYLOAD_LENGTH}]),
+	{ok, Socket} = gen_tcp:connect(Host, Port, [binary, {packet, ?HEADER_NUM_BYTES}]),
 	loop(Socket).
 
 loop(Socket) ->

@@ -3,10 +3,10 @@ if ARGV.length != 2
   exit
 end
 
-require File.join(File.dirname(__FILE__), '../lib/ruby_eval_utils')
+require File.join(File.dirname(__FILE__), '../lib/revaler_utils')
 
 class RubyClient < EM::Connection
-  include RubyEvalUtils
+  include RevalerUtils
 
   def post_init
     puts 'Connected to server'

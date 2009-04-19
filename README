@@ -13,6 +13,6 @@ a command may reuse the binding of the command before it
 == Communication specification
 
 Commands sent to the server and responses from the server are in the form:
-payload_length (4 bytes, big endian) | payload (string)
+header (payload length, 4-byte integer, big endian) | payload (string)
 
 The payload is only a string. See "example" directory for a client for Erlang.
