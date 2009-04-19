@@ -18,11 +18,11 @@ Code sent to the server and results from the server are in the form:
 * header is a 4-byte big-endian integer indicating payload length
 * payload is a string, not terminated with null byte
 
-== Examples
+== Example
 
 See "example" directory.
 
-Start server:
+From Revaler directory, start server:
 ruby bin/revaler.rb localhost 9999
 
 Run Ruby client:
